@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/peyzor/portfolio/views"
 	"net/http"
 )
 
@@ -9,7 +11,8 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "hello portfolio")
+		component := views.Hello("portfolio")
+		component.Render(context.Background(), w)
 	})
 
 	port := 8080
