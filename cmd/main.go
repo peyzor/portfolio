@@ -1,18 +1,28 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"github.com/peyzor/portfolio/views"
+	"html/template"
 	"net/http"
+	"path/filepath"
 )
 
 func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		component := views.Hello("portfolio")
-		component.Render(context.Background(), w)
+		templatePath := filepath.Join("views", "ping.html")
+		tmpl, err := template.ParseFiles(templatePath)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		err = tmpl.Execute(w, nil)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	})
 
 	port := 8080
